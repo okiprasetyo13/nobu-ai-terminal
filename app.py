@@ -12,7 +12,7 @@ with tabs[0]:
     st.markdown(df.to_html(escape=False), unsafe_allow_html=True)
 
 with tabs[1]:
-    ready_to_trade  # ✅ Activates the full trade panel
+    ready_to_trade.app()  # ✅ This actually runs the trade panel UI
 
 with tabs[2]:
     st.markdown("🚧 Market Overview coming soon...")
