@@ -12,7 +12,7 @@ results = analyze_all_symbols()
 df = pd.DataFrame(results)
 
 st.markdown("### 📊 Live Scalping Signal Table")
-st.dataframe(df.set_index("Symbol"))
+#st.dataframe(df.set_index("Symbol"))
 
 st.success("✅ Full table rendered. Replace placeholder with signal_engine.analyze_all_symbols().")
 st.markdown(df.to_html(escape=False), unsafe_allow_html=True)
