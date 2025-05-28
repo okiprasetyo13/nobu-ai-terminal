@@ -1,1 +1,1 @@
-# Telegram bot integration logic
+# Telegram integration logic

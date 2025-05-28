@@ -1,1 +1,1 @@
-# Ready to Trade page logic
+# Detail panel for single coin: chart, signals, manual trade log

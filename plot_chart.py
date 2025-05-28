@@ -1,1 +1,1 @@
-# Chart rendering logic with MACD and S/R
+# Inline chart renderer with support, resistance, MACD, TP/SL overlay
