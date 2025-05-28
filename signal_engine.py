@@ -60,7 +60,7 @@ def analyze_symbol(symbol):
         tip = "MACD trending up"
         suit = "Long"
 
-    if score == 2:
+    if score == 4:
         message = f"📡 *{symbol}* Signal: {tip}\nEntry: {entry:.2f}, SL: {sl:.2f}, TP: {tp:.2f}"
         send_telegram_alert(message)
 
