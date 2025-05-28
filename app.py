@@ -2,9 +2,15 @@
 import streamlit as st
 import pandas as pd
 import ready_to_trade
+from signal_engine import analyze_all_symbols
+
+# Load results first
+results = analyze_all_symbols()
+df = pd.DataFrame(results)
 
 st.set_page_config(page_title="Nobu AI Terminal Pro", layout="wide")
 st.title("📡 Nobu AI Terminal Pro – Expert Scalping Terminal")
+
 tabs = st.tabs(["Live Signal Scanner", "Ready to Trade", "Market Overview"])
 
 with tabs[0]:
@@ -16,10 +22,6 @@ with tabs[1]:
 
 with tabs[2]:
     st.markdown("🚧 Market Overview coming soon...")
-
-# Simulated signal results (to be replaced with analyze_all_symbols logic)
-from signal_engine import analyze_all_symbols
-results = analyze_all_symbols()
 
 df = pd.DataFrame(results)
 
