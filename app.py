@@ -1,29 +1,23 @@
 
 import streamlit as st
+import pandas as pd
 
 st.set_page_config(page_title="Nobu AI Terminal Pro", layout="wide")
-
 st.title("📡 Nobu AI Terminal Pro – Expert Scalping Terminal")
 
-tabs = st.tabs(["Live Signal Scanner", "Ready to Trade", "Market Overview"])
+# Simulated signal results (to be replaced with analyze_all_symbols logic)
+results = [
+    {"Symbol": "BTC", "Price": 68000, "RSI": 29.1, "EMA9": 67950, "EMA21": 67800, 
+     "Support": 67500, "Resistance": 68500, "Entry": 68020, "SL": 67800, "TP": 68400, 
+     "Score": 4, "Suitability": "Scalping", "Expert Tip": "Buy now, target 68400"},
+    {"Symbol": "ETH", "Price": 3800, "RSI": 32.5, "EMA9": 3795, "EMA21": 3780, 
+     "Support": 3750, "Resistance": 3850, "Entry": 3805, "SL": 3780, "TP": 3840, 
+     "Score": 3, "Suitability": "Long", "Expert Tip": "Entry confirmed with MACD"}
+]
 
-with tabs[0]:
-    st.subheader("📈 Live Signal Scanner")
-    st.markdown("✅ Coinbase WebSocket live price feed connected")
-    st.markdown("✅ RSI, EMA9/21, MACD, Volume Spike signals active")
-    st.markdown("✅ Signal Table: Support, Resistance, Entry, TP, SL, Score")
-    st.markdown("✅ Inline Chart (with MACD, S/R, TP)")
-    st.markdown("🟢 Trade Suitability: Long, Short, Scalping")
+df = pd.DataFrame(results)
 
-with tabs[1]:
-    st.subheader("🧠 Ready to Trade")
-    st.markdown("✅ Manual input for buy/sell")
-    st.markdown("✅ Real-time PnL calculator")
-    st.markdown("✅ Telegram alert triggers")
+st.markdown("### 📊 Live Scalping Signal Table")
+st.dataframe(df.set_index("Symbol"))
 
-with tabs[2]:
-    st.subheader("📊 Market Overview")
-    st.markdown("✅ Global overview of top ranked scalping coins")
-    st.markdown("✅ Real-time signal feed")
-
-st.success("✅ Nobu AI Terminal v0.1 Pro loaded. Live signal engine and charts are integrated.")
+st.success("✅ Full table rendered. Replace placeholder with signal_engine.analyze_all_symbols().")
