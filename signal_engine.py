@@ -4,6 +4,7 @@ import requests
 from ta.trend import EMAIndicator, MACD
 from ta.momentum import RSIIndicator
 from plot_chart import render_chart
+from telegram_alerts import send_telegram_alert
 
 symbols = ["BTC", "ETH", "SOL", "AVAX", "LTC", "DOGE", "MATIC", "ADA", "LINK", "OP"]
 COINBASE_API = "https://api.exchange.coinbase.com/products/{}/candles"
@@ -58,6 +59,10 @@ def analyze_symbol(symbol):
         score = 2
         tip = "MACD trending up"
         suit = "Long"
+
+    if score == 4:
+        message = f"📡 *{symbol}* Signal: {tip}\nEntry: {entry:.2f}, SL: {sl:.2f}, TP: {tp:.2f}"
+        send_telegram_alert(message)
 
     chart_html = render_chart(df.tail(30), tp=tp, sl=sl)
 
