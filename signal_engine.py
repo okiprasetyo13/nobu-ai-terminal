@@ -2,8 +2,7 @@
 import pandas as pd
 import requests
 from ta.trend import EMAIndicator
-from ta.momentum import RSIIndicator
-from ta.trend import MACDIndicator
+from ta.momentum import RSIIndicator, MACDIndicator
 
 symbols = ["BTC", "ETH", "SOL", "AVAX", "LTC", "DOGE", "MATIC", "ADA", "LINK", "OP"]
 COINBASE_API = "https://api.exchange.coinbase.com/products/{}/candles"
