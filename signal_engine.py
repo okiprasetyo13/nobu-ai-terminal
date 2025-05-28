@@ -1,8 +1,8 @@
 
 import pandas as pd
 import requests
-from ta.trend import EMAIndicator
-from ta.momentum import RSIIndicator, MACDIndicator
+from ta.trend import EMAIndicator, MACD
+from ta.momentum import RSIIndicator
 
 symbols = ["BTC", "ETH", "SOL", "AVAX", "LTC", "DOGE", "MATIC", "ADA", "LINK", "OP"]
 COINBASE_API = "https://api.exchange.coinbase.com/products/{}/candles"
@@ -31,7 +31,7 @@ def analyze_symbol(symbol):
     df["ema9"] = EMAIndicator(df["close"], window=9).ema_indicator()
     df["ema21"] = EMAIndicator(df["close"], window=21).ema_indicator()
     df["rsi"] = RSIIndicator(df["close"]).rsi()
-    df["macd"] = MACDIndicator(df["close"]).macd_diff()
+    df["macd"] = MACD(df["close"]).macd_diff()
 
     latest = df.iloc[-1]
     price = latest["close"]
