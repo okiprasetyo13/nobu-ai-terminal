@@ -3,11 +3,12 @@ import pandas as pd
 import requests
 from ta.trend import EMAIndicator, MACD
 from ta.momentum import RSIIndicator
+from plot_chart import render_chart
 
 symbols = ["BTC", "ETH", "SOL", "AVAX", "LTC", "DOGE", "MATIC", "ADA", "LINK", "OP"]
 COINBASE_API = "https://api.exchange.coinbase.com/products/{}/candles"
 
-def fetch_coinbase_candles(symbol, granularity=60, limit=100):
+def fetch_coinbase_candles(symbol, granularity=60):
     pair = f"{symbol}-USDT"
     url = COINBASE_API.format(pair)
     params = {"granularity": granularity}
@@ -58,6 +59,8 @@ def analyze_symbol(symbol):
         tip = "MACD trending up"
         suit = "Long"
 
+    chart_html = render_chart(df.tail(30), tp=tp, sl=sl)
+
     return {
         "Symbol": symbol,
         "Price": round(price, 2),
@@ -71,7 +74,8 @@ def analyze_symbol(symbol):
         "TP": round(tp, 2),
         "Score": score,
         "Suitability": suit,
-        "Expert Tip": tip
+        "Expert Tip": tip,
+        "Chart": chart_html
     }
 
 def analyze_all_symbols():
