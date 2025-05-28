@@ -22,8 +22,3 @@ with tabs[1]:
 
 with tabs[2]:
     st.markdown("🚧 Market Overview coming soon...")
-
-df = pd.DataFrame(results)
-
-st.markdown("### 📊 Live Scalping Signal Table")
-#st.dataframe(df.set_index("Symbol"))
