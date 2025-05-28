@@ -1,1 +1,1 @@
-# Streamlit page: Ready to Trade detail view
+# Ready to Trade page logic

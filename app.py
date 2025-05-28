@@ -1,2 +1,3 @@
-# Main Streamlit app
-# Entry point for Nobu AI Terminal
+# Nobu AI Terminal main app
+import streamlit as st
+st.title('Nobu AI Terminal Pro')

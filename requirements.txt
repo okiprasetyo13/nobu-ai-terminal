@@ -3,5 +3,5 @@ requests
 pandas
 matplotlib
 ta
-websocket-client
 python-dotenv
+websocket-client

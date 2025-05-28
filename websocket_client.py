@@ -1,1 +1,1 @@
-# Coinbase WebSocket price stream handler
+# Coinbase WebSocket integration

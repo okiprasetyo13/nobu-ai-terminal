@@ -1,1 +1,1 @@
-# Inline chart engine including MACD, support/resistance
+# Chart rendering logic with MACD and S/R

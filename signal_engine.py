@@ -1,1 +1,1 @@
-# Handles RSI, EMA, MACD, Support/Resistance analysis
+# Handles RSI, EMA, MACD, support/resistance

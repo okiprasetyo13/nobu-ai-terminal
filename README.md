@@ -1,10 +1,14 @@
 
-# Nobu AI Terminal Pro – v0.1
+# Nobu AI Terminal Pro – v0.1 Fixed
 
-✅ Expert crypto scalping app with real-time Coinbase WebSocket feed  
-✅ Signal engine with RSI, EMA, MACD, volume, support/resistance  
-✅ Inline charts (mobile friendly)  
-✅ "Ready to Trade" page with PnL calculator + Telegram alerts  
-✅ Secure deployment & optimized for Render (SE Asia)
+✅ Live Coinbase WebSocket Price Feed  
+✅ Signal Engine: RSI, EMA, MACD, Support/Resistance  
+✅ Inline Chart with MACD, TP, SL  
+✅ "Ready to Trade" Panel with PnL Calculator  
+✅ Telegram Alerts + Environment Example  
+✅ Streamlit-compatible for Render (port 10000)
 
-See full README in app for details.
+## Start Command (Render)
+```bash
+streamlit run app.py --server.port=10000 --server.address=0.0.0.0
+```

@@ -1,1 +1,1 @@
-# Send Telegram alerts via bot token
+# Telegram bot integration logic
