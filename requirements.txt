@@ -1,7 +1,7 @@
 streamlit
+requests
 pandas
 matplotlib
-requests
 ta
-websocket-client
 python-dotenv
+websocket-client

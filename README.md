@@ -1,3 +1,14 @@
-# Nobu AI Terminal Pro v0.1 Final Release
 
-Includes full expert-level crypto scalping logic, WebSocket price feed, live signal scoring, MACD chart overlays, and trade suitability insights. Ready for real-world trading.
+# Nobu AI Terminal Pro – v0.1 Fixed
+
+✅ Live Coinbase WebSocket Price Feed  
+✅ Signal Engine: RSI, EMA, MACD, Support/Resistance  
+✅ Inline Chart with MACD, TP, SL  
+✅ "Ready to Trade" Panel with PnL Calculator  
+✅ Telegram Alerts + Environment Example  
+✅ Streamlit-compatible for Render (port 10000)
+
+## Start Command (Render)
+```bash
+streamlit run app.py --server.port=10000 --server.address=0.0.0.0
+```

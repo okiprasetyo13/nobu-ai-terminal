@@ -1,1 +1,1 @@
-# Coinbase WebSocket feed connection logic
+# Coinbase WebSocket integration
