@@ -1,56 +1,71 @@
 
-import base64
-from io import BytesIO
-import matplotlib.pyplot as plt
+import requests
+import pandas as pd
+import numpy as np
+import plot_chart
+from datetime import datetime, timedelta
 
-# ✅ Simple chart plotter
-def generate_chart(prices):
-    plt.figure(figsize=(2, 1))
-    plt.plot(prices, linewidth=2)
-    plt.title("Mini Chart")
-    plt.xticks([])
-    plt.yticks([])
-    plt.tight_layout()
-    buffer = BytesIO()
-    plt.savefig(buffer, format="png")
-    buffer.seek(0)
-    image_base64 = base64.b64encode(buffer.read()).decode("utf-8")
-    plt.close()
-    return f"<img src='data:image/png;base64,{image_base64}'/>"
+COINBASE_API_URL = "https://api.exchange.coinbase.com"
 
-# ✅ Simulated real-time scalping signals
+def fetch_ohlcv(symbol, granularity=60, limit=50):
+    url = f"{COINBASE_API_URL}/products/{symbol}-USD/candles?granularity={granularity}"
+    response = requests.get(url)
+    if response.status_code != 200:
+        return None
+    data = response.json()
+    df = pd.DataFrame(data, columns=['time', 'low', 'high', 'open', 'close', 'volume'])
+    df['time'] = pd.to_datetime(df['time'], unit='s')
+    df = df.sort_values('time')
+    return df
+
+def analyze_symbol(symbol):
+    df = fetch_ohlcv(symbol)
+    if df is None or df.empty:
+        return None
+
+    close = df['close']
+    rsi = compute_rsi(close)
+    ema9 = close.ewm(span=9).mean().iloc[-1]
+    ema21 = close.ewm(span=21).mean().iloc[-1]
+    support = close.min()
+    resistance = close.max()
+    entry = close.iloc[-1]
+    sl = entry * 0.99
+    tp = entry * 1.01
+    score = int(rsi // 10)
+    suitability = 'Scalping' if rsi < 40 else 'Long' if rsi < 70 else 'Short'
+    tip = "Buy now, breakout expected" if suitability == 'Scalping' else "MACD showing bullish divergence"
+    chart = plot_chart.generate_chart_base64(df)
+
+    return {
+        'Symbol': symbol,
+        'Price': round(entry, 2),
+        'RSI': round(rsi, 2),
+        'EMA9': round(ema9, 2),
+        'EMA21': round(ema21, 2),
+        'Support': round(support, 2),
+        'Resistance': round(resistance, 2),
+        'Entry': round(entry, 2),
+        'SL': round(sl, 2),
+        'TP': round(tp, 2),
+        'Score': score,
+        'Suitability': suitability,
+        'Expert Tip': tip,
+        'Chart': chart
+    }
+
+def compute_rsi(series, period=14):
+    delta = series.diff()
+    gain = (delta.where(delta > 0, 0)).rolling(window=period).mean()
+    loss = (-delta.where(delta < 0, 0)).rolling(window=period).mean()
+    rs = gain / loss
+    return 100 - (100 / (1 + rs)).iloc[-1]
+
 def analyze_all_symbols():
-    return [
-        {
-            "Symbol": "BTC",
-            "Price": 45516.75,
-            "RSI": 61.58,
-            "EMA9": 45203.25,
-            "EMA21": 47336.99,
-            "Support": 44600.00,
-            "Resistance": 46000.00,
-            "Entry": 45300.00,
-            "SL": 44900.00,
-            "TP": 45900.00,
-            "Score": 4,
-            "Suitability": "Scalping",
-            "Expert Tip": "Buy now, breakout expected",
-            "Chart": generate_chart([44000, 45000, 45200, 45500, 45800])
-        },
-        {
-            "Symbol": "ETH",
-            "Price": 32445.97,
-            "RSI": 54.33,
-            "EMA9": 32860.86,
-            "EMA21": 32987.38,
-            "Support": 31797.00,
-            "Resistance": 33250.00,
-            "Entry": 32300.00,
-            "SL": 32000.00,
-            "TP": 33000.00,
-            "Score": 3,
-            "Suitability": "Long",
-            "Expert Tip": "MACD showing bullish divergence",
-            "Chart": generate_chart([31000, 31500, 32000, 32500, 32800])
-        }
-    ]
+    symbols = ['BTC', 'ETH']
+    results = []
+    for symbol in symbols:
+        data = analyze_symbol(symbol)
+        if data:
+            results.append(data)
+    return results
