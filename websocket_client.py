@@ -1,1 +1,1 @@
-# Placeholder for websocket_client.py
+# Coinbase WebSocket integration

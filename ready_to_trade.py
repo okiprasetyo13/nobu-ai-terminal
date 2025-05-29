@@ -1,1 +1,1 @@
-# Placeholder for ready_to_trade.py
+# Ready to Trade page logic

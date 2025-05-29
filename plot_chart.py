@@ -1,1 +1,1 @@
-# Placeholder for plot_chart.py
+# Chart rendering logic with MACD and S/R

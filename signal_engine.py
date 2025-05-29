@@ -1,1 +1,1 @@
-# Placeholder for signal_engine.py
+# Handles RSI, EMA, MACD, support/resistance

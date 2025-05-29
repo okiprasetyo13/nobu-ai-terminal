@@ -1,1 +1,7 @@
-# Placeholder for requirements.txt
+streamlit
+requests
+pandas
+matplotlib
+ta
+python-dotenv
+websocket-client

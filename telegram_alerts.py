@@ -1,1 +1,1 @@
-# Placeholder for telegram_alerts.py
+# Telegram bot integration logic
