@@ -1,24 +1,43 @@
+def generate_trade_advice(row):
+    """
+    Generate expert-level advice for each coin based on signal strength, price action, and indicators.
+    """
 
-import streamlit as st
-import requests
-import time
+    try:
+        signal = row['Signal']
+        score = row['Score']
+        rsi = row['RSI']
+        ema9 = row['EMA9']
+        ema21 = row['EMA21']
+        price = row['Price']
+        support = row['Support']
+        resistance = row['Resistance']
+        tp = row['TP']
+        sl = row['SL']
 
-def app():
-    st.title("🟢 Ready to Trade")
-
-    symbol = st.selectbox("Select Coin", ["BTC", "ETH"])
-    entry = st.number_input("Entry Price", min_value=0.0, format="%.2f")
-    stop_loss = st.number_input("Stop Loss", min_value=0.0, format="%.2f")
-    take_profit = st.number_input("Take Profit", min_value=0.0, format="%.2f")
-
-    if st.button("Activate Trade Monitor"):
-        if entry > 0 and stop_loss > 0 and take_profit > 0:
-            st.session_state[f"{symbol}_trade"] = {
-                'entry': entry,
-                'stop_loss': stop_loss,
-                'take_profit': take_profit,
-                'start_time': time.time()
-            }
-            st.success(f"🔔 {symbol} trade monitor activated!")
+        # Trade direction suggestion
+        if score >= 8 and price <= support * 1.01:
+            strategy = "Scalping Buy"
+            entry = f"Enter around {price}"
+            take_profit = f"TP around {tp}"
+            stop_loss = f"SL around {sl}"
+        elif score >= 8 and price >= resistance * 0.99:
+            strategy = "Short Trading"
+            entry = f"Enter short around {price}"
+            take_profit = f"TP near {support}"
+            stop_loss = f"SL above {resistance}"
+        elif ema9 > ema21 and rsi < 70:
+            strategy = "Long Trading"
+            entry = f"Buy around {price}"
+            take_profit = f"TP near {tp}"
+            stop_loss = f"SL near {sl}"
         else:
-            st.warning("Please complete all fields.")
+            strategy = "Wait"
+            entry = "No clear entry"
+            take_profit = "-"
+            stop_loss = "-"
+
+        return f"{strategy} | {entry} | {take_profit} | {stop_loss}"
+
+    except Exception as e:
+        return f"Error generating advice: {str(e)}"
