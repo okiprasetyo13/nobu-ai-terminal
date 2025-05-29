@@ -1,52 +1,56 @@
+
 import base64
 from io import BytesIO
 import matplotlib.pyplot as plt
 
-# ✅ Simple chart generator
-def generate_chart():
+# ✅ Simple chart plotter
+def generate_chart(prices):
     plt.figure(figsize=(2, 1))
-    plt.plot([1, 2, 3], [1, 4, 2], linewidth=2)
-    plt.title('Chart')
+    plt.plot(prices, linewidth=2)
+    plt.title("Mini Chart")
+    plt.xticks([])
+    plt.yticks([])
+    plt.tight_layout()
     buffer = BytesIO()
-    plt.savefig(buffer, format='png', bbox_inches='tight')
+    plt.savefig(buffer, format="png")
     buffer.seek(0)
-    image_base64 = base64.b64encode(buffer.read()).decode('utf-8')
+    image_base64 = base64.b64encode(buffer.read()).decode("utf-8")
     plt.close()
     return f"<img src='data:image/png;base64,{image_base64}'/>"
 
-# ✅ Simulated live signal results
+# ✅ Simulated real-time scalping signals
 def analyze_all_symbols():
     return [
         {
             "Symbol": "BTC",
-            "Price": 45500.75,
-            "RSI": 61.3,
-            "EMA9": 45200.10,
-            "EMA21": 45750.85,
-            "Support": 45000.0,
-            "Resistance": 46000.0,
-            "Entry": 45300.0,
-            "SL": 45050.0,
-            "TP": 45850.0,
+            "Price": 45516.75,
+            "RSI": 61.58,
+            "EMA9": 45203.25,
+            "EMA21": 47336.99,
+            "Support": 44600.00,
+            "Resistance": 46000.00,
+            "Entry": 45300.00,
+            "SL": 44900.00,
+            "TP": 45900.00,
             "Score": 4,
             "Suitability": "Scalping",
             "Expert Tip": "Buy now, breakout expected",
-            "Chart": generate_chart()
+            "Chart": generate_chart([44000, 45000, 45200, 45500, 45800])
         },
         {
             "Symbol": "ETH",
-            "Price": 3250.25,
-            "RSI": 58.9,
-            "EMA9": 3220.55,
-            "EMA21": 3265.90,
-            "Support": 3200.0,
-            "Resistance": 3300.0,
-            "Entry": 3240.0,
-            "SL": 3210.0,
-            "TP": 3280.0,
+            "Price": 32445.97,
+            "RSI": 54.33,
+            "EMA9": 32860.86,
+            "EMA21": 32987.38,
+            "Support": 31797.00,
+            "Resistance": 33250.00,
+            "Entry": 32300.00,
+            "SL": 32000.00,
+            "TP": 33000.00,
             "Score": 3,
             "Suitability": "Long",
-            "Expert Tip": "MACD confirmed entry",
-            "Chart": generate_chart()
-        }
-    ]
+            "Expert Tip": "MACD showing bullish divergence",
+            "Chart": generate_chart([31000, 31500, 32000, 32500, 32800])
+        }
+    ]
