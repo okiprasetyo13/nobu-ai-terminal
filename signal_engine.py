@@ -1,71 +1,76 @@
-
-import requests
 import pandas as pd
+from ta.momentum import RSIIndicator
+from ta.trend import EMAIndicator
 import numpy as np
-import plot_chart
-from datetime import datetime, timedelta
 
-COINBASE_API_URL = "https://api.exchange.coinbase.com"
-
-def fetch_ohlcv(symbol, granularity=60, limit=50):
-    url = f"{COINBASE_API_URL}/products/{symbol}-USD/candles?granularity={granularity}"
-    response = requests.get(url)
-    if response.status_code != 200:
-        return None
-    data = response.json()
-    df = pd.DataFrame(data, columns=['time', 'low', 'high', 'open', 'close', 'volume'])
-    df['time'] = pd.to_datetime(df['time'], unit='s')
-    df = df.sort_values('time')
+def calculate_indicators(df):
+    df['EMA9'] = EMAIndicator(close=df['close'], window=9).ema_indicator()
+    df['EMA21'] = EMAIndicator(close=df['close'], window=21).ema_indicator()
+    df['RSI'] = RSIIndicator(close=df['close'], window=14).rsi()
     return df
 
-def analyze_symbol(symbol):
-    df = fetch_ohlcv(symbol)
-    if df is None or df.empty:
-        return None
+def detect_support_resistance(df):
+    support = df['low'].rolling(window=20).min().iloc[-1]
+    resistance = df['high'].rolling(window=20).max().iloc[-1]
+    return support, resistance
 
-    close = df['close']
-    rsi = compute_rsi(close)
-    ema9 = close.ewm(span=9).mean().iloc[-1]
-    ema21 = close.ewm(span=21).mean().iloc[-1]
-    support = close.min()
-    resistance = close.max()
-    entry = close.iloc[-1]
-    sl = entry * 0.99
-    tp = entry * 1.01
-    score = int(rsi // 10)
-    suitability = 'Scalping' if rsi < 40 else 'Long' if rsi < 70 else 'Short'
-    tip = "Buy now, breakout expected" if suitability == 'Scalping' else "MACD showing bullish divergence"
-    chart = plot_chart.generate_chart_base64(df)
-
-    return {
-        'Symbol': symbol,
-        'Price': round(entry, 2),
-        'RSI': round(rsi, 2),
-        'EMA9': round(ema9, 2),
-        'EMA21': round(ema21, 2),
-        'Support': round(support, 2),
-        'Resistance': round(resistance, 2),
-        'Entry': round(entry, 2),
-        'SL': round(sl, 2),
-        'TP': round(tp, 2),
-        'Score': score,
-        'Suitability': suitability,
-        'Expert Tip': tip,
-        'Chart': chart
-    }
-
-def compute_rsi(series, period=14):
-    delta = series.diff()
-    gain = (delta.where(delta > 0, 0)).rolling(window=period).mean()
-    loss = (-delta.where(delta < 0, 0)).rolling(window=period).mean()
-    rs = gain / loss
-    return 100 - (100 / (1 + rs)).iloc[-1]
-
-def analyze_all_symbols():
-    symbols = ['BTC', 'ETH']
+def generate_signals(live_prices):
     results = []
-    for symbol in symbols:
-        data = analyze_symbol(symbol)
-        if data:
-            results.append(data)
-    return results
+
+    for symbol, df in live_prices.items():
+        if df is None or len(df) < 21:
+            continue
+
+        df = calculate_indicators(df)
+        support, resistance = detect_support_resistance(df)
+
+        price = df['close'].iloc[-1]
+        rsi = df['RSI'].iloc[-1]
+        ema9 = df['EMA9'].iloc[-1]
+        ema21 = df['EMA21'].iloc[-1]
+
+        signal = "HOLD"
+        if rsi < 30 and price < ema9 < ema21:
+            signal = "BUY"
+        elif rsi > 70 and price > ema9 > ema21:
+            signal = "SELL"
+
+        score = 0
+        if signal == "BUY":
+            score = round((ema21 - price) / price * 100, 2)
+        elif signal == "SELL":
+            score = round((price - ema21) / price * 100, 2)
+
+        sl = round(support * 0.98, 8)
+        tp = round(resistance * 0.98, 8)
+        buy_price = round(support * 1.01, 8)
+
+        # Determine trading suitability
+        suitability = "Scalping"
+        if rsi > 70:
+            suitability = "Short Trading"
+        elif rsi < 30:
+            suitability = "Long Trading"
+
+        # Volume approximation
+        volume = round(df['volume'].iloc[-20:].mean(), 2)
+
+        results.append({
+            "Symbol": symbol,
+            "Price": price,
+            "Signal": signal,
+            "Score": score,
+            "RSI": round(rsi, 2),
+            "EMA9": round(ema9, 2),
+            "EMA21": round(ema21, 2),
+            "Support": round(support, 8),
+            "Resistance": round(resistance, 8),
+            "Buy Price": buy_price,
+            "SL": sl,
+            "TP": tp,
+            "Volume": volume,
+            "Suitability": suitability,
+            "Active": signal == "BUY"
+        })
+
+    return pd.DataFrame(results)
