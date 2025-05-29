@@ -1,7 +1,1 @@
-streamlit
-pandas
-matplotlib
-requests
-ta
-websocket-client
-python-dotenv
+# Placeholder for requirements.txt

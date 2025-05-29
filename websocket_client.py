@@ -1,1 +1,1 @@
-# Coinbase WebSocket feed connection logic
+# Placeholder for websocket_client.py
