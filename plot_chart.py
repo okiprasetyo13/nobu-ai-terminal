@@ -1,22 +1,20 @@
 import matplotlib.pyplot as plt
-import base64
+import pandas as pd
 from io import BytesIO
+import base64
 
-def generate_chart_base64(df):
-    try:
-        fig, ax = plt.subplots(figsize=(2.5, 1.2))
-        ax.plot(df['close'], linewidth=1.5)
-        ax.set_xticks([])
-        ax.set_yticks([])
-        ax.axis('off')
-        plt.tight_layout()
+def plot_mini_chart(df, symbol=""):
+    fig, ax = plt.subplots(figsize=(2.5, 1.5), dpi=100)
+    ax.plot(df['close'].tail(30).values, linewidth=1.5)
+    ax.set_xticks([])
+    ax.set_yticks([])
+    ax.set_title(symbol, fontsize=6)
+    ax.grid(False)
+    plt.tight_layout()
 
-        buf = BytesIO()
-        plt.savefig(buf, format='png', dpi=100, bbox_inches='tight', pad_inches=0)
-        plt.close(fig)
-        buf.seek(0)
-        image_base64 = base64.b64encode(buf.read()).decode('utf-8')
-        return f'<img src="data:image/png;base64,{image_base64}" width="80"/>'
-    except Exception as e:
-        return "<i>Chart error</i>"
-
+    buffer = BytesIO()
+    plt.savefig(buffer, format="png")
+    buffer.seek(0)
+    image_base64 = base64.b64encode(buffer.read()).decode()
+    plt.close(fig)
+    return f"data:image/png;base64,{image_base64}"
